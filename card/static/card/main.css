@@ -1,0 +1,129 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: #fff;
+  }
+
+
+
+  /* Main style sheet for jQuery Keypad v1.1.0 */
+button.keypad-trigger {
+	width: 35px;
+	padding: 0px;
+}
+img.keypad-trigger {
+	margin: 2px;
+	vertical-align: middle;
+}
+#keypad-div {
+	display: none;
+	z-index: 10;
+	margin: 0;
+	padding: 4px;
+    margin-top: 5px;
+	border: 1px solid #888;
+    border-radius: 8px;
+	color: #000;
+	border: 1px outset #A9A9A9;
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 14px;
+	background-color: #f4f4f4;
+}
+.keypad-keyentry {
+	width: 0px;
+	z-index: -10;
+}
+.keypad-inline {
+	position: relative;
+	top: -1.5em;
+	border: 1px solid #888;
+	background-color: #f4f4f4;
+}
+.keypad-disabled {
+	position: absolute;
+	z-index: 100;
+	background-color: white;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+}
+.keypad-rtl {
+	direction: rtl;
+}
+.keypad-prompt {
+	clear: both;
+	width: 100%;
+	text-align: center;
+}
+.keypad-row {
+	clear: both;
+	float: left;
+	width: 100%;
+}
+.keypad-space {
+	float: left;
+	margin: 2px;
+	width: 34px;
+}
+.keypad-half-space {
+	float: left;
+	margin: 1px;
+	width: 12px;
+}
+.keypad-key {
+	float: left;
+	margin: 2px;
+	padding: 5px 0px;
+	width: 34px;
+	background-color: #FFFFFF;
+	text-align: center;
+	cursor: pointer;
+    border-radius: 8px;
+	border: 1px outset #A9A9A9;
+}
+.keypad-key:hover {
+	border: 0px outset #A9A9A9;
+	border-top-width: 1px;
+	border-left-width: 1px;
+	border-top-color: #696969;
+	border-left-color: #696969;
+	border-bottom-width: 0.5px;
+	border-right-width: 0.5px;
+	border-bottom-color: #FAFAFA;
+	border-right-color: #FAFAFA;
+	background-color: #F5F5F5;
+}
+
+.keypad-key[disabled] {
+	border: 1px outset #A9A9A9;
+}
+.keypad-key-down {
+}
+.keypad-clear, .keypad-back, .keypad-close, .keypad-shift {
+	width: 34px;
+	color: #000000;
+	font-weight: normal;
+}
+.keypad-clear {
+	background-color: #DEF7DE;
+}
+.keypad-back {
+	background-color: #DEF7DE;
+}
+.keypad-close {
+	background-color: #FFEBCD;
+}
+.keypad-shift {
+	background-color: #FFFFFF;
+}
+.keypad-cover {
+	display: none;
+	display/**/: block;
+	position: absolute;
+	z-index: -1;
+	filter: mask();
+	top: -4px;
+	left: -4px;
+	width: 165px;
+	height: 240px;
+}

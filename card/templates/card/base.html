@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+      <meta charset="utf-8">
+      {% if title %}
+          <title>Bank of Arstotzka- {{ title }}</title>
+      {% else %}
+          <title>Bank of Arstotzka</title>
+      {% endif %}
+      <link rel="stylesheet" type="text/css" href="{% static 'card/main.css' %}">
+      <script type="text/javascript" src="{% static 'card/jquery1.3.1.js' %}"></script>
+      <script type="text/javascript" src="{% static 'card/jquerykeypad.js' %}"></script>
+      <script type="text/javascript">
+      var numericLayout = ['123' + + $.keypad.CLOSE, '456' + $.keypad.SPACE, '789' + $.keypad.BACK, + $.keypad.CLEAR + '0'];
+      $(function () {
+        $('#username').keypad({
+            closeText: 'X',
+            clearText: 'C',
+            backText: '&larr;',
+            layout: ['123' + $.keypad.CLOSE, '456' + $.keypad.SPACE, '789' + $.keypad.SPACE, $.keypad.CLEAR + '0' + $.keypad.BACK]
+        });
+      });
+      $(function () {
+        $('#password').keypad({
+            closeText: 'X',
+            clearText: 'C',
+            backText: '&larr;'
+
+        });
+      });
+
+    </script>
+  </head>  
+  <body>
+    {% block content %}{% endblock %}
+  </body>
+</html>
