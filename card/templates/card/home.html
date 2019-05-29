@@ -1,9 +1,10 @@
 {% extends "card/base.html" %}
 {% block content %}
       <div>
-        <a>BALANCE</a>
-        <a>WITHDRAW CASH</a>
-        <a>TOP UP</a>
+        <a href='{% url "balance" %}'>BALANCE</a>
+        <a href='{% url "cash" %}'>WITHDRAW CASH</a>
+        <a href='{% url "top_up" %}'> TOP UP</a>
         <a>CANGE PIN</a>
+        <a href='{% url "logout_card" %}'>END SESSION</a>
       </div>
 {% endblock content %}

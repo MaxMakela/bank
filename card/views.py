@@ -28,4 +28,18 @@ def login_card(request):
 
 
 def logout_card(request):
+    logout(request)
     return HttpResponseRedirect(reverse('login_card'))
+
+
+@login_required(redirect_field_name='login_card')
+def balance(request):
+    return render(request, 'card/balance.html')
+
+@login_required(redirect_field_name='login_card')
+def top_up(request):
+    return render(request, 'card/top_up.html')
+
+@login_required(redirect_field_name='login_card')
+def cash(request):
+    return render(request, 'card/cash.html')
