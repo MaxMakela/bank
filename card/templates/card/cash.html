@@ -1,0 +1,11 @@
+{% extends "card/base.html" %}
+{% block content %}
+    <form class="box" method="POST">
+        {% csrf_token %}
+        <h1>Get Cash</h1>
+        <input type="text" name="summ" id='summ' placeholder="Input summ">
+        <input type="submit" name="" value="Get">
+        <p>{{comment}}</p>
+    </form>
+    <a href='{% url "home" %}'>BACK</a>
+{% endblock content %}

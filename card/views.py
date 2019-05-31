@@ -3,7 +3,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from card.models import CardInfo
 
+#тут все на столько сырое, что скоро выростут грибы
 
 @login_required(redirect_field_name='login_card')
 def home(request):
@@ -12,6 +14,7 @@ def home(request):
 
 
 def login_card(request):
+    logout(request)
     context = {}
     if request.method == "POST":
         cardID = request.POST['username']
@@ -27,19 +30,40 @@ def login_card(request):
         return render(request, 'card/login.html', context)
 
 
-def logout_card(request):
-    logout(request)
-    return HttpResponseRedirect(reverse('login_card'))
-
-
 @login_required(redirect_field_name='login_card')
 def balance(request):
     return render(request, 'card/balance.html')
 
+
 @login_required(redirect_field_name='login_card')
-def top_up(request):
-    return render(request, 'card/top_up.html')
+def refill(request):
+    context = {}
+    if request.method == "POST":
+        summ = int(request.POST['summ'])
+        card = request.user
+        card.balance=card.balance+summ
+        card.save()
+        context['success'] = 'Operation done successful'
+        return render(request, 'card/refill.html', context)
+    else:
+        return render(request, 'card/refill.html', context)
+
 
 @login_required(redirect_field_name='login_card')
 def cash(request):
-    return render(request, 'card/cash.html')
+    context = {}
+    if request.method == "POST":
+        summ = int(request.POST['summ'])
+        card = request.user
+        if card.balance >= summ:
+            card.balance=card.balance-summ
+            card.save()
+            context['comment'] = 'Operation done successful'
+            return render(request, 'card/cash.html', context)
+        else:
+            context['comment'] = 'Insufficient funds in your account!'
+            return render(request, 'card/cash.html', context)
+
+    else:
+        return render(request, 'card/cash.html', context)
+
