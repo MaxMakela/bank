@@ -67,3 +67,29 @@ def cash(request):
     else:
         return render(request, 'card/cash.html', context)
 
+
+@login_required(redirect_field_name='login_card')
+def pin_change(request):
+    context = {}
+    if request.method == "POST":
+        card = request.user
+        current_pin = card.password
+        new_pin = request.POST['password']
+        if current_pin != new_pin:
+            if password_valid(new_pin):
+                card.set_password(new_pin)
+                card.save()
+                context['comment'] = 'Your pin was changed'
+                return render(request, 'card/pin_change.html', context)
+            else:
+                context['comment'] = 'Incorrect pin format. Try another one'
+                return render(request, 'card/pin_change.html', context)
+        else: 
+            context['comment'] = 'New pin can not be the same old'
+            return render(request, 'card/pin_change.html', context)
+    else:
+        return render(request, 'card/pin_change.html', context)
+
+
+def password_valid(pin):
+    return False if len(pin)!=4 and pin[0]==pin[1] and pin[2]==pin[3] else True

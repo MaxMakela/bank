@@ -9,4 +9,5 @@ urlpatterns = [
     path('balance/', balance, name='balance'),
     path('cash/', cash, name='cash'),
     path('refill/', refill, name='refill'),
+    path('pin_change', pin_change, name='pin_change')
 ]
