@@ -19,6 +19,7 @@ def login_card(request):
     if request.method == "POST":
         cardID = request.POST['username']
         password = request.POST['password']
+        print(cardID in request.session)
         User = get_user_model()
         card = authenticate(request, cardID=cardID, password=password)
         if card:
@@ -27,10 +28,13 @@ def login_card(request):
         else:
             if User.objects.filter(cardID=cardID).exists():
                 print(request.session.get(cardID))
-                if request.session.get(cardID):
+                if cardID in request.session:
                     request.session[cardID] += 1
                 else: 
                     request.session[cardID] = 1
+                request.session.modified = True
+                print(cardID in request.session)
+                #request.session.set_expiry(300)
                 #request.session[cardID] = request.session.get(cardID, 0) + 1
                 if request.session.get(cardID) >= 3:
                     print("some2")
@@ -38,7 +42,7 @@ def login_card(request):
                     print(card.balance)
                     card.is_active = False
                     card.save()
-                return redirect('login_card')
+                return HttpResponseRedirect(reverse('login_card'))
             context['error'] = 'Wrong card data!'
             return render(request, 'card/login.html', context)
     else:
@@ -73,7 +77,7 @@ def cash(request):
         if card.balance >= summ:
             card.balance=card.balance-summ
             card.save()
-            context['comment'] = 'Operation successful done'
+            context['comment'] = 'Operation done successful'
             return render(request, 'card/cash.html', context)
         else:
             context['comment'] = 'Insufficient funds in your account!'
@@ -88,10 +92,10 @@ def pin_change(request):
     context = {}
     if request.method == "POST":
         card = request.user
-        #current_pin = card.password
+        current_pin = card.password
         new_pin = request.POST['password']
-        if card.check_password(new_pin):
-            if password_valid(new_pin):
+        if current_pin != new_pin:
+            if pin_valid(new_pin):
                 card.set_password(new_pin)
                 card.save()
                 context['comment'] = 'Your pin was changed'
@@ -106,11 +110,5 @@ def pin_change(request):
         return render(request, 'card/pin_change.html', context)
 
 
-def password_valid(pin):
+def pin_valid(pin):
     return False if len(pin)!=4 and pin[0]==pin[1] and pin[2]==pin[3] else True
-
-
-
-
-
-        

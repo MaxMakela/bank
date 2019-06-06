@@ -1,10 +1,79 @@
-body{
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    background: #fff;
+body {
+	font: 14px/ 18px Arial, Helvetica, sans-serif;
+	background-color:#DCDCDC;
+	text-align: center;
   }
-
+  #wrapper {
+	background-color:#F5F5F5;
+	width: 400px;
+	margin: 0 auto;
+	margin-top: 100px;
+	text-align: center;
+	padding: 30px 0px 50px 0px;
+	border: 1px outset #FFFFFF;
+	border-radius: 15px;
+  }
+  h1 {
+	font: 20px/ 24px Arial, Helvetica, sans-serif;
+  }
+  
+  #form {
+	max-width: 222px;
+	background-color:transparent;
+	margin: 0 auto;
+	text-align: left;
+  }
+  
+  #username {
+	  width: 200px;
+	  margin: 3px 0px;
+	  padding: 10px;
+	  border: 1px outset #A9A9A9;
+	  border-radius: 8px;
+  }
+  #password {
+	  width: 200px;
+	  margin: 3px 0px;
+	  padding: 10px;
+	  border: 1px outset #A9A9A9;
+	  border-radius: 8px;
+  }
+  #summ {
+	width: 200px;
+	margin: 3px 0px;
+	padding: 10px;
+	border: 1px outset #A9A9A9;
+	border-radius: 8px;
+ }
+  #knopka {
+	  width: 222px;
+	  margin: 3px 0px;
+	  padding: 10px;
+	  border: 1px outset #A9A9A9;
+	  border-radius: 8px;
+	  cursor: pointer;
+	  background: linear-gradient(#F5F5F5, #DCDCDC) #DCDCDC;
+  }
+  #knopka:hover {
+	background: linear-gradient(#FCFCFC, #EBEBEB) #EBEBEB;
+  }
+  
+  a.knopka-menu {
+	display: inline-block;
+	text-decoration: none;
+	color: #000000;
+	width: 200px;
+	margin: 3px 0px;
+	padding: 10px;
+	border: 1px outset #A9A9A9;
+	border-radius: 8px;
+	cursor: pointer;
+	background: linear-gradient(#F5F5F5, #DCDCDC) #DCDCDC;
+  }
+  a.knopka-menu:hover {
+	background: linear-gradient(#FCFCFC, #EBEBEB) #EBEBEB;
+  }
+  
 
 
   /* Main style sheet for jQuery Keypad v1.1.0 */
