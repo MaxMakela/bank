@@ -29,6 +29,7 @@ class AccManager(BaseUserManager):
 
 
 
+
 class CardInfo(AbstractBaseUser, PermissionsMixin):
   cardID = models.CharField(
         max_length=16,
