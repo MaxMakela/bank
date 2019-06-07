@@ -5,7 +5,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from card.models import CardInfo
 
-#тут все на столько сырое, что скоро выростут грибы
+# тут все на столько сырое, что скоро выростут грибы
+
 
 @login_required(redirect_field_name='login_card')
 def home(request):
@@ -18,7 +19,6 @@ def login_card(request):
     if request.method == "POST":
         cardID = request.POST['username']
         password = request.POST['password']
-        print(cardID in request.session)
         User = get_user_model()
         card = authenticate(request, cardID=cardID, password=password)
         if card:
@@ -26,19 +26,13 @@ def login_card(request):
             return HttpResponseRedirect(reverse('home'))
         else:
             if User.objects.filter(cardID=cardID).exists():
-                print(request.session.get(cardID))
                 if cardID in request.session:
                     request.session[cardID] += 1
                 else: 
                     request.session[cardID] = 1
                 request.session.modified = True
-                print(cardID in request.session)
-                #request.session.set_expiry(300)
-                #request.session[cardID] = request.session.get(cardID, 0) + 1
                 if request.session.get(cardID) >= 3:
-                    print("some2")
                     card = User.objects.get(cardID=cardID)
-                    print(card.balance)
                     card.is_active = False
                     card.save()
                 return HttpResponseRedirect(reverse('login_card'))
