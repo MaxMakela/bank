@@ -14,7 +14,6 @@ def home(request):
 
 
 def login_card(request):
-    logout(request)
     context = {}
     if request.method == "POST":
         cardID = request.POST['username']
@@ -108,6 +107,12 @@ def pin_change(request):
             return render(request, 'card/pin_change.html', context)
     else:
         return render(request, 'card/pin_change.html', context)
+        
+        
+@login_required(redirect_field_name='login_card')
+def logout_card(request):
+    logout(request)
+    return render(request, 'card/login.html')
 
 
 def pin_valid(pin):
