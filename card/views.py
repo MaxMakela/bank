@@ -3,7 +3,6 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from card.models import CardInfo
 
 # тут все на столько сырое, что скоро выростут грибы
 
