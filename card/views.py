@@ -110,3 +110,5 @@ def logout_card(request):
 
 def pin_valid(pin):
     return False if len(pin)!=4 and pin[0]==pin[1] and pin[2]==pin[3] else True
+
+
