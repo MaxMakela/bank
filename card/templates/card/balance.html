@@ -1,6 +1,7 @@
 {% extends "card/base.html" %}
 {% block content %}
       <div>
-        Your balance: ${{user.balance}}
+            Your balance: ${{user.balance}}
+          <a href='{% url "home" %}'>BACK</a>
       </div>
 {% endblock content %}

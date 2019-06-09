@@ -75,6 +75,37 @@ body {
   }
   
 
+  a {
+	  width: 222px;
+	  margin: 3px 0px;
+	  padding: 10px;
+	  border: 1px outset #A9A9A9;
+	  border-radius: 8px;
+	  cursor: pointer;
+	  background: linear-gradient(#F5F5F5, #DCDCDC) #DCDCDC;
+	  text-decoration: none;
+	  color: #000;
+  }
+
+   a.visited {
+      color: #808000;
+	  width: 222px;
+	  margin: 3px 0px;
+	  padding: 10px;
+	  border: 1px outset #A9A9A9;
+	  border-radius: 8px;
+	  cursor: pointer;
+	  background: linear-gradient(#F5F5F5, #DCDCDC) #DCDCDC;
+	  text-decoration: none;
+	  color: #000;
+  }
+
+  a:hover {
+	background: linear-gradient(#FCFCFC, #EBEBEB) #EBEBEB;
+	text-decoration: none;
+	color: #000;
+  }
+
 
   /* Main style sheet for jQuery Keypad v1.1.0 */
 button.keypad-trigger {
