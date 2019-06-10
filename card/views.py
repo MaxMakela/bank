@@ -60,7 +60,11 @@ def balance(request):
 def refill(request):
 	context = {}
 	if request.method == "POST":
-		summ = int(request.POST['summ'])
+		if request.POST['summ']:
+			summ = int(request.POST['summ'])
+		else:
+			context['comment'] = 'Enter the amount you want to add to your account'
+			return render(request, 'card/cash.html', context)
 		card = request.user
 		card.balance = card.balance+summ
 		card.save()
@@ -74,7 +78,11 @@ def refill(request):
 def cash(request):
 	context = {}
 	if request.method == "POST":
-		summ = int(request.POST['summ'])
+		if request.POST['summ']:
+			summ = int(request.POST['summ'])
+		else:
+			context['comment'] = 'Enter the amount you want to withdraw'
+			return render(request, 'card/cash.html', context)
 		card = request.user
 		if card.balance >= summ:
 			card.balance = card.balance-summ
