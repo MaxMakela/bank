@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth.models import AbstractBaseUser
+
 
 # тут все на столько сырое, что скоро выростут грибы
 
@@ -10,6 +12,8 @@ from django.urls import reverse
 @login_required(redirect_field_name='login_card')
 def home(request):
 	context = {}
+	if request.session.get('new_pin'):
+		del request.session['new_pin']
 	return render(request, 'card/home.html', context)
 
 
@@ -91,10 +95,9 @@ def pin_change(request):
 	if request.method == "POST":
 		
 		card = request.user
-		current_pin = card.password
 		new_pin = request.POST['password']
 		
-		if new_pin in request.session:
+		if request.session.get('new_pin'):
 			if request.session.get('new_pin') == new_pin:
 				card.set_password(new_pin)
 				card.save()
@@ -106,10 +109,8 @@ def pin_change(request):
 				context['comment'] = 'Pins do not match. Try again'
 				return render(request, 'card/pin_change.html', context)
 		
-		if current_pin != new_pin:
-			print('cur')
+		if not card.check_password(new_pin):
 			if pin_valid(new_pin):
-				print('valid')
 				request.session['new_pin'] = new_pin
 				context['comment'] = 'Confirm pin'
 				return render(request, 'card/pin_change.html', context)
@@ -130,6 +131,6 @@ def logout_card(request):
 
 
 def pin_valid(pin):
-	return False if len(pin) != 4 and pin[0] == pin[1] and pin[2] == pin[3] else True
+	return False if len(pin) != 4 or pin[0] == pin[1] or pin[2] == pin[3] else True
 
 
