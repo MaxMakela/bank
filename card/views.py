@@ -16,10 +16,7 @@ User = get_user_model()
 
 @login_required(redirect_field_name='login_card')
 def home(request):
-    context = {}
-    if request.session.get('new_pin'):
-        del request.session['new_pin']
-    return render(request, 'card/home.html', context)
+    return render(request, 'card/home.html')
 
 
 def login_card(request):
@@ -35,8 +32,8 @@ def login_card(request):
             else:
                 context['error'] = 'Wrong pin or card ID!'
                 if User.objects.filter(card_id=card_id).exists():
-                    incorect_pin_try = LoginInfo(card_id=card_id)
-                    incorect_pin_try.save()
+                    incorrect_pin_try = LoginInfo(card_id=card_id)
+                    incorrect_pin_try.save()
                     if len(LoginInfo.objects.filter(card_id=card_id, time__gt=datetime.now(tz=get_current_timezone())-timedelta(minutes=3))) >= 3:
                         card = User.objects.get(card_id=card_id)
                         card.is_active = False
@@ -60,20 +57,20 @@ def balance(request):
 def refill(request):
     context = {}
     if request.method == "POST":
-        if request.POST['summ']:
-            summ = int(request.POST['summ'])
-            if summ < 0:
-                summ *= -1
+        if request.POST['amount']:
+            amount = int(request.POST['amount'])
+            if amount < 0:
+                amount *= -1
         else:
             context['comment'] = 'Enter the amount you want to add to your account'
             return render(request, 'card/cash.html', context)
         card = request.user
-        card.balance = card.balance+summ
-        transact = Transaction(card_id=card, operation=True, value=summ, new_balance=card.balance)
+        card.balance = card.balance+amount
+        transact = Transaction(card_id=card, operation=True, value=amount, new_balance=card.balance)
         if card.balance >= 0:
             transact.save()
             card.save()
-        context['success'] = 'Operation done successful'
+        context['success'] = 'Success'
         return render(request, 'card/refill.html', context)
     else:
         return render(request, 'card/refill.html', context)
@@ -83,30 +80,29 @@ def refill(request):
 def cash(request):
     context = {}
     if request.method == "POST":
-        if request.POST['summ']:
-            summ = int(request.POST['summ'])
-            if summ < 0:
-                summ *= -1
+        if request.POST['amount']:
+            amount = int(request.POST['amount'])
+            if amount < 0:
+                amount *= -1
         else:
             context['comment'] = 'Enter the amount you want to withdraw'
             return render(request, 'card/cash.html', context)
         card = request.user
-        if card.balance >= summ:
-            card.balance = card.balance-summ
-            transact = Transaction(card_id=card, operation=False, value=summ, new_balance=card.balance)
+        if card.balance >= amount:
+            card.balance = card.balance-amount
+            transact = Transaction(card_id=card, operation=False, value=amount, new_balance=card.balance)
             if card.balance >= 0:
                 transact.save()
                 card.save()
-            context['comment'] = 'Operation done successful'
+            context['comment'] = 'Success'
             return render(request, 'card/cash.html', context)
         else:
-            context['comment'] = 'Insufficient funds in your account!'
+            context['comment'] = 'Insufficient funds on your account!'
             return render(request, 'card/cash.html', context)
     else:
         return render(request, 'card/cash.html', context)
 
 
-# Мне стыдно за этот метод. Простите, что читаете что это
 @login_required(redirect_field_name='login_card')
 def pin_change(request):
     context = {}
