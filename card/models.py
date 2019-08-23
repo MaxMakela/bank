@@ -7,6 +7,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
     AbstractBaseUser
 )
+from django.utils.timezone import get_current_timezone
 
 USERNAME_REGEX = '^[0-9]*$'
 PIN_REGEX = '^[0-9]*$'

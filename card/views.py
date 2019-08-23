@@ -34,10 +34,8 @@ def login_card(request):
                 if User.objects.filter(card_id=card_id).exists():
                     incorrect_pin_try = LoginInfo(card_id=card_id)
                     incorrect_pin_try.save()
-                    if len(LoginInfo.objects.filter(card_id=card_id, time__gt=datetime.now(tz=get_current_timezone())-timedelta(minutes=3))) >= 3:
-                        card = User.objects.get(card_id=card_id)
-                        card.is_active = False
-                        card.save()
+                    if incorrect_try_count_valid(card_id):
+                        card_lock(card_id)
                         context['error'] = 'Card has been blocked! To unlock, contact the bank employees.'
                     return render(request, 'card/login.html', context)
                 return render(request, 'card/login.html', context)
@@ -169,3 +167,14 @@ def current_pin_valid_context(card, new_pin):
     else:
         context['comment'] = 'New pin can not be the same old'
         return context
+
+
+def card_lock(card_id):
+    card = User.objects.get(card_id=card_id)
+    card.is_active = False
+    card.save()
+
+
+def incorrect_try_count_valid(card_id):
+    time_gt = datetime.now(tz=get_current_timezone()) - timedelta(minutes=3)
+    return True if len(LoginInfo.objects.filter(card_id=card_id, time__gt=time_gt)) >= 3 else False
