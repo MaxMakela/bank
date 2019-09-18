@@ -120,11 +120,13 @@ def pin_change(request):
                     pin_obj.confirm = True
                     pin_obj.save()
                     context['comment'] = 'Your pin was changed'
+                    print(f"{context['comment']}, {card}")
                     return render(request, 'card/pin_change.html', context)
                 else:
                     pin_obj.confirm = True
                     pin_obj.save()
                     context['comment'] = 'Pins do not match. Try again'
+                    print(f"{context['comment']}, {card}")
                     return render(request, 'card/pin_change.html', context)
             else:
                 return render(request, 'card/pin_change.html', current_pin_valid_context(card, new_pin))
@@ -160,12 +162,15 @@ def current_pin_valid_context(card, new_pin):
         if pin_valid(new_pin):
             PinSaver(card_id=card, new_pin=new_pin).save()
             context['comment'] = 'Confirm pin'
+            print(f"{context['comment']}, {card}")
             return context
         else:
             context['comment'] = 'Incorrect pin format. Try another one'
+            print(f"{context['comment']}, {card}")
             return context
     else:
         context['comment'] = 'New pin can not be the same old'
+        print(f"{context['comment']}, {card}")
         return context
 
 

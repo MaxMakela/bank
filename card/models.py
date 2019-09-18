@@ -29,6 +29,12 @@ class AccManager(BaseUserManager):
         user.is_superuser = True
         user.save(using=self._db)
         return user
+    
+    def get_card(self, card_id):
+        cards = self.filter(card_id=card_id)
+        if not cards:
+            raise LookupError(f"Card was not found: {card_id}")
+        return cards[0]
 
 
 class CardInfo(AbstractBaseUser, PermissionsMixin):
@@ -47,7 +53,10 @@ class CardInfo(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'card_id'
     REQUIRED_FIELDS = []
-
+    
+    def __str__(self):
+        return f"card_id: {self.card_id}, pin 1234: {self.check_password('1234')}, pin 1235: {self.check_password('1235')}"
+    
 
 class LoginInfo(models.Model):
     card_id = models.CharField(
