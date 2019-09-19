@@ -67,7 +67,7 @@ class TestCardProcessing(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'card/balance.html')
 
-    def test_pin_change(self):
+    def test_correct_pin_change(self):
         client = Client()
     
         response = client.get(reverse('home'))
@@ -79,26 +79,51 @@ class TestCardProcessing(TestCase):
         print(f"Before changing password {card}")
         self.assertTrue(card.check_password('1234'))
     
-        response = client.post(reverse('pin_change'), {'password': '1235'})
-        self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, 'card/pin_change.html')
-    
-        response = client.post(reverse('pin_change'), {'password': '1235'})
-        self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, 'card/pin_change.html')
-        
+        self.assertTrue(self.pin_changing(client, '1235', '1235', '1235'))
+
+    def test_wrong_pin_change(self):
+        client = Client()
+
+        response = client.get(reverse('home'))
+        self.assertEquals(response.status_code, 302)
+
+        client.login(card_id=self.card_id, password="1234")
+
         card = self.user.objects.get_card(self.card_id)
-        print(f"After changing password {card}")
-        self.assertTrue(card.check_password('1235'))
+        print(f"Before changing password {card}")
+        self.assertTrue(card.check_password('1234'))
+
+        # Incorrect confirm
+        self.assertTrue(self.pin_changing(client, '1235', '1236', '1234'))
+
+        # The same pin
+        self.assertTrue(self.pin_changing(client, '1234', '1236', '1234'))
+
+        # Incorrect pin format
+        self.assertTrue(self.pin_changing(client, 'qwer', '1236', '1234'))
 
     def test_cash(self):
-        client = Client()
-    
-        response = client.get(reverse('home'))
-        self.assertEquals(response.status_code, 302)
-    
-        client.login(card_id=self.card_id, password="1234")
+        # client = Client()
+        # 
+        # response = client.get(reverse('home'))
+        # self.assertEquals(response.status_code, 302)
+        # 
+        # client.login(card_id=self.card_id, password="1234")
+        # 
+        # card = self.user.objects.get_card(self.card_id)
+        # print(f"Before changing password {card}")
+        # self.assertTrue(card.check_password('1234'))
+        pass
+
+    def pin_changing(self, client, first_pin, second_pin, current_pin):
+        response = client.post(reverse('pin_change'), {'password': first_pin})
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'card/pin_change.html')
+
+        response = client.post(reverse('pin_change'), {'password': second_pin})
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'card/pin_change.html')
 
         card = self.user.objects.get_card(self.card_id)
-        print(f"Before changing password {card}")
-        self.assertTrue(card.check_password('1234'))
+        print(f"After changing password {card}")
+        return card.check_password(current_pin)
