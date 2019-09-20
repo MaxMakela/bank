@@ -56,7 +56,10 @@ def refill(request):
     context = {}
     if request.method == "POST":
         if request.POST['amount']:
-            amount = int(request.POST['amount'])
+            try:
+                amount = int(request.POST['amount'])
+            except ValueError:
+                amount = 0
             if amount < 0:
                 amount *= -1
         else:
@@ -79,7 +82,10 @@ def cash(request):
     context = {}
     if request.method == "POST":
         if request.POST['amount']:
-            amount = int(request.POST['amount'])
+            try:
+                amount = int(request.POST['amount'])
+            except ValueError:
+                amount = 0
             if amount < 0:
                 amount *= -1
         else:

@@ -103,17 +103,33 @@ class TestCardProcessing(TestCase):
         self.assertTrue(self.pin_changing(client, 'qwer', '1236', '1234'))
 
     def test_cash(self):
-        # client = Client()
-        # 
-        # response = client.get(reverse('home'))
-        # self.assertEquals(response.status_code, 302)
-        # 
-        # client.login(card_id=self.card_id, password="1234")
-        # 
-        # card = self.user.objects.get_card(self.card_id)
-        # print(f"Before changing password {card}")
-        # self.assertTrue(card.check_password('1234'))
-        pass
+        client = Client()
+
+        response = client.get(reverse('home'))
+        self.assertEquals(response.status_code, 302)
+
+        client.login(card_id=self.card_id, password="1234")
+
+        # Default balance equals 1000
+        self.assertEquals(self.cash_changing(client, 100), 900)
+        self.assertEquals(self.cash_changing(client, 1000), 0)
+        self.assertEquals(self.cash_changing(client, -100), 900)
+        self.assertEquals(self.cash_changing(client, 'fewfwef'), 1000)
+        self.assertEquals(self.cash_changing(client, 1001), 1000)
+
+    def test_refill(self):
+        client = Client()
+
+        response = client.get(reverse('home'))
+        self.assertEquals(response.status_code, 302)
+
+        client.login(card_id=self.card_id, password="1234")
+
+        # Default balance equals 1000
+        self.assertEquals(self.refill_changing(client, 100), 1100)
+        self.assertEquals(self.refill_changing(client, 0), 1000)
+        self.assertEquals(self.refill_changing(client, -100), 1100)
+        self.assertEquals(self.refill_changing(client, 'fewfwef'), 1000)
 
     def pin_changing(self, client, first_pin, second_pin, current_pin):
         response = client.post(reverse('pin_change'), {'password': first_pin})
@@ -127,3 +143,23 @@ class TestCardProcessing(TestCase):
         card = self.user.objects.get_card(self.card_id)
         print(f"After changing password {card}")
         return card.check_password(current_pin)
+
+    def cash_changing(self, client, amount):
+        card = self.user.objects.get_card(self.card_id)
+        card.balance = 1000
+        card.save()
+        response = client.post(reverse('cash'), {'amount': amount})
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'card/cash.html')
+        card = self.user.objects.get_card(self.card_id)
+        return card.balance
+
+    def refill_changing(self, client, amount):
+        card = self.user.objects.get_card(self.card_id)
+        card.balance = 1000
+        card.save()
+        response = client.post(reverse('refill'), {'amount': amount})
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'card/refill.html')
+        card = self.user.objects.get_card(self.card_id)
+        return card.balance
