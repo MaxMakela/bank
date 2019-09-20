@@ -11,8 +11,6 @@ from django.utils.timezone import get_current_timezone
 
 User = get_user_model()
 
-# тут все на столько сырое, что скоро выростут грибы
-
 
 @login_required(redirect_field_name='login_card')
 def home(request):
